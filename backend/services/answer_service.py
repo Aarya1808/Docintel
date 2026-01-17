@@ -13,7 +13,7 @@ def generate_answer(
 
     for idx, chunk in enumerate(retrieved_chunks, start=1):
         source = chunk.metadata.get("source", "unknown")
-        page = chunk.metadata.get("page", "unknown")
+        page = chunk.metadata.get("page")
 
         context += f"[{idx}] Source: {source}, Page: {page}\n"
         context += chunk.page_content + "\n\n"
