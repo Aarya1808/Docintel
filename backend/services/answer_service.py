@@ -1,7 +1,5 @@
-from dotenv import load_dotenv
-load_dotenv()
 from typing import List, Dict
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_ollama import ChatOllama
 from langchain_core.messages import HumanMessage
 from langchain_core.documents import Document
 
@@ -10,10 +8,6 @@ def generate_answer(
     question: str,
     retrieved_chunks: List[Document]
 ) -> Dict:
-    """
-    Generate an answer strictly from retrieved document chunks.
-    """
-
     context = ""
     sources = []
 
@@ -34,7 +28,7 @@ You are a document-based question answering assistant.
 
 RULES:
 - Answer ONLY using the provided context.
-- Do NOT use outside knowledge.
+- Do NOT add any facts that are not explicitly stated in the context.
 - Do NOT infer beyond the context.
 - If the answer is not present, say: "I don't know based on the documents."
 - Cite sources using [number] notation.
@@ -48,14 +42,12 @@ Question:
 Answer:
 """
 
-    llm = ChatGoogleGenerativeAI(
-        model="gemini-2.0-flash",
+    llm = ChatOllama(
+        model="mistral",
         temperature=0
     )
 
-    response = llm.invoke(
-        [HumanMessage(content=prompt)]
-    )
+    response = llm.invoke([HumanMessage(content=prompt)])
 
     return {
         "answer": response.content,
